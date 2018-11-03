@@ -7,7 +7,7 @@ const getStream = () => new Readable({
   read() { },
 });
 
-describe('Mapper', () => {
+describe('map', () => {
   test('a transform stream is returned', () => {
     const r = map();
     expect(r).toBeInstanceOf(Transform);

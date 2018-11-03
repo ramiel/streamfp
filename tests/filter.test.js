@@ -3,7 +3,7 @@ const { streamAsPromise, createStream } = require('utils');
 const filter = require('filter');
 
 
-describe('Filter', () => {
+describe('filter', () => {
   test('a transform stream is returned', () => {
     const r = filter(() => true);
     expect(r).toBeInstanceOf(Transform);

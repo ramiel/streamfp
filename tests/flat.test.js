@@ -3,7 +3,7 @@ const flat = require('flat');
 const { streamAsPromise, createStream } = require('utils');
 
 
-describe('Flat', () => {
+describe('flat', () => {
   test('a transform stream is returned', () => {
     const r = flat();
     expect(r).toBeInstanceOf(Transform);

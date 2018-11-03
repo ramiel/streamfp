@@ -5,7 +5,7 @@ const filter = require('filter');
 const mapAsync = require('mapAsync');
 const { createStream, streamAsPromise } = require('utils');
 
-describe('Async Mapper', () => {
+describe('mapAsync', () => {
   test('a transform stream is returned', () => {
     const r = mapAsync();
     expect(r).toBeInstanceOf(Transform);

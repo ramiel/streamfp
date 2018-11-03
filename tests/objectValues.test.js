@@ -3,7 +3,7 @@ const objectValues = require('objectValues');
 const { streamAsPromise, createStream } = require('utils');
 
 
-describe('Last', () => {
+describe('objectValues', () => {
   test('a transform stream is returned', () => {
     const r = objectValues();
     expect(r).toBeInstanceOf(Transform);

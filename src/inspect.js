@@ -7,7 +7,7 @@ class Inspector extends Transform {
       writableObjectMode: true,
       ...options,
     });
-    this.inspectFn = options.inspectFn instanceof Function
+    this.inspectFn = options.inspectFn !== undefined && typeof options.inspectFn !== 'string'
       ? options.inspectFn
       : console.log; // eslint-disable-line no-console
     this.title = typeof options.inspectFn === 'string' ? options.inspectFn : '';

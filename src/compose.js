@@ -1,6 +1,7 @@
 const compose = (...writables) => (readable) => {
   const onError = (e) => {
     writables.forEach((w) => {
+      /* istanbul ignore else  */
       if (w.destroy) {
         w.destroy(e);
       }

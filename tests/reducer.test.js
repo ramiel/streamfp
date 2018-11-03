@@ -13,7 +13,7 @@ const streamAsPromise = stream => new Promise((resolve, reject) => {
   stream.on('end', () => resolve(lastData));
 });
 
-describe('Reducer', () => {
+describe('reducer', () => {
   test('a transform stream is returned', () => {
     const r = reducer(() => {});
     expect(r).toBeInstanceOf(Transform);

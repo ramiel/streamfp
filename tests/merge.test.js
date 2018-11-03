@@ -19,6 +19,16 @@ describe('merge', () => {
     expect(result).toEqual(['1', '2', '3', 'a', 'b', 'c']);
   });
 
+  test('two streams are merged in non-object mode', async () => {
+    const stream1 = createStream(['1', '2', '3', null]);
+    const stream2 = createStream(['a', 'b', 'c', null]);
+    const mergedStream = merge([stream1, stream2], false);
+    const result = await streamAsPromise(mergedStream);
+    expect(result).toHaveLength(6);
+    result.forEach(r => expect(r).toBeInstanceOf(Buffer));
+    expect(result.map(r => r.toString())).toEqual(['1', '2', '3', 'a', 'b', 'c']);
+  });
+
   test('merge can be merged', async () => {
     const stream1 = createStream(['1', '2', '3', null]);
     const stream2 = createStream(['a', 'b', 'c', null]);

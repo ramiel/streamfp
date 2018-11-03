@@ -1,6 +1,6 @@
 const { Transform } = require('stream');
 
-class Grouper extends Transform {
+class Group extends Transform {
   constructor(options) {
     super({
       readableObjectMode: true,
@@ -36,4 +36,4 @@ class Grouper extends Transform {
  * This transformer groups responses producing array of a defined size.
  * The output is always an array
  */
-module.exports = size => new Grouper({ size });
+module.exports = size => new Group({ size });

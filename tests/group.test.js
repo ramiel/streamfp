@@ -1,19 +1,19 @@
 const { Transform, Readable } = require('stream');
-const grouper = require('grouper');
+const group = require('group');
 
 const getStream = () => new Readable({
   objectMode: true,
   read() { },
 });
 
-describe('Grouper', () => {
+describe('group', () => {
   test('a transform stream is returned', () => {
-    const r = grouper();
+    const r = group();
     expect(r).toBeInstanceOf(Transform);
   });
 
   test('4 chunks are grouped by 2 if size is 2', (done) => {
-    const r = grouper(2);
+    const r = group(2);
     const stream = getStream();
     stream.push({});
     stream.push({});
@@ -32,7 +32,7 @@ describe('Grouper', () => {
   });
 
   test('2 chunks are grouped by 1 if size is 1', (done) => {
-    const r = grouper(1);
+    const r = group(1);
     const stream = getStream();
     stream.push({});
     stream.push({});
@@ -49,7 +49,7 @@ describe('Grouper', () => {
   });
 
   test('default size is 1', (done) => {
-    const r = grouper();
+    const r = group();
     const stream = getStream();
     stream.push({});
     stream.push({});
@@ -67,7 +67,7 @@ describe('Grouper', () => {
 
   test('20 chunks are grouped by 4 if size is 5', (done) => {
     const size = 5;
-    const r = grouper(size);
+    const r = group(size);
     const stream = getStream();
     for (let i = 0; i < 20; i++) {
       stream.push({});
@@ -87,7 +87,7 @@ describe('Grouper', () => {
   test('23 chunks are grouped 4 times (size = 5) plus 1 last (size = 3) if size is 5', (done) => {
     const size = 5;
     const count = 23;
-    const r = grouper(size);
+    const r = group(size);
     const stream = getStream();
     for (let i = 0; i < count; i++) {
       stream.push({});
