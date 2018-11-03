@@ -4,7 +4,7 @@ test:
   script:
     - npm ci
     - npm test
-  coverage: ^Statements\s*:\s*([^%]+)
+  coverage: '^Statements\s*:\s*([^%]+)'
 
 codequality:
   stage: test

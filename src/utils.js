@@ -1,4 +1,4 @@
-const fromValues = require('../src/fromValues');
+const fromValues = require('./fromValues');
 
 const utils = {
   streamAsPromise: stream => new Promise((resolve, reject) => {
