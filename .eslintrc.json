@@ -1,0 +1,15 @@
+{
+    "root": true,
+    "extends": "airbnb-base",
+    "rules": {
+        "no-plusplus": [0],
+        "no-underscore-dangle": 0,
+        "max-len": [1, 100, 2, {
+            "ignoreUrls": true,
+            "ignoreComments": true,
+            "ignoreRegExpLiterals": true,
+            "ignoreStrings": true,
+            "ignoreTemplateLiterals": true
+        }]
+    }
+}

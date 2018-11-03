@@ -1,0 +1,56 @@
+{
+  "name": "cascade",
+  "version": "0.1.0",
+  "description": "Transform node streams in reactive entities with a simplified management",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "test": "npm run lint && npm run test-only -- --coverage",
+    "test-only": "NODE_ENV=test jest",
+    "test-watch": "npm run test-only -- --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/ramiel/cascade.git"
+  },
+  "keywords": [
+    "stream",
+    "node",
+    "reactive"
+  ],
+  "author": "Fabrizio Ruggeri",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://gitlab.com/ramiel/cascade/issues"
+  },
+  "homepage": "https://gitlab.com/ramiel/cascade#readme",
+  "devDependencies": {
+    "eslint": "^5.7.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-import-resolver-jest": "^2.1.1",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jest": "^21.26.0",
+    "jest": "^23.6.0"
+  },
+  "dependencies": {
+    "duplexer2": "^0.1.4",
+    "multistream": "^2.1.1"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ],
+    "coverageReporters": [
+      "text-summary",
+      "html"
+    ],
+    "moduleDirectories": [
+      "src",
+      "node_modules"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/"
+    ]
+  }
+}
