@@ -1,6 +1,6 @@
 const { Duplex } = require('stream');
 const pipeline = require('pipeline');
-const mapper = require('mapper');
+const map = require('map');
 const compose = require('compose');
 const { createStream, streamAsPromise } = require('utils');
 
@@ -18,10 +18,10 @@ describe('pipeline', () => {
     const stream = createStream([1, 3, 4, null]);
     const rs = compose(
       pipeline(
-        mapper(double),
-        mapper(double),
+        map(double),
+        map(double),
       ),
-      mapper(minusOne),
+      map(minusOne),
     )(stream);
     const result = await streamAsPromise(rs);
     expect(result).toEqual([3, 11, 15]);
@@ -30,10 +30,10 @@ describe('pipeline', () => {
   test('pipe of pipe', async () => {
     const stream = createStream([1, 3, 4, null]);
     const inner = pipeline(
-      mapper(double),
-      mapper(double),
+      map(double),
+      map(double),
     );
-    const rs = stream.pipe(inner).pipe(mapper(minusOne));
+    const rs = stream.pipe(inner).pipe(map(minusOne));
     const result = await streamAsPromise(rs);
     expect(result).toEqual([3, 11, 15]);
   });
@@ -42,13 +42,13 @@ describe('pipeline', () => {
     const stream = createStream([1, 3, 4, null]);
     const rs = compose(
       pipeline(
-        mapper(double),
+        map(double),
         pipeline(
-          mapper(double),
-          mapper(triple),
+          map(double),
+          map(triple),
         ),
       ),
-      mapper(minusOne),
+      map(minusOne),
     )(stream);
     const result = await streamAsPromise(rs);
     expect(result).toEqual([11, 35, 47]);
@@ -59,10 +59,10 @@ describe('pipeline', () => {
     const error = new Error('An error on first transformer');
     const rs = compose(
       pipeline(
-        mapper(() => { throw error; }),
-        mapper(double),
+        map(() => { throw error; }),
+        map(double),
       ),
-      mapper(minusOne),
+      map(minusOne),
     )(stream);
     await expect(streamAsPromise(rs)).rejects.toBe(error);
   });
@@ -72,10 +72,10 @@ describe('pipeline', () => {
     const error = new Error('An error on first transformer');
     const rs = compose(
       pipeline(
-        mapper(double),
-        mapper(() => { throw error; }),
+        map(double),
+        map(() => { throw error; }),
       ),
-      mapper(minusOne),
+      map(minusOne),
     )(stream);
     await expect(streamAsPromise(rs)).rejects.toBe(error);
   });

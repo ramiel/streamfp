@@ -1,13 +1,13 @@
 const { Transform } = require('stream');
-const mapper = require('mapper');
+const map = require('map');
 const compose = require('compose');
 const filter = require('filter');
-const asyncMapper = require('asyncMapper');
+const mapAsync = require('mapAsync');
 const { createStream, streamAsPromise } = require('utils');
 
 describe('Async Mapper', () => {
   test('a transform stream is returned', () => {
-    const r = asyncMapper();
+    const r = mapAsync();
     expect(r).toBeInstanceOf(Transform);
   });
 
@@ -15,7 +15,7 @@ describe('Async Mapper', () => {
     const stream = createStream();
     stream.push(10);
     stream.push(null);
-    const result = stream.pipe(asyncMapper(async x => x * 2));
+    const result = stream.pipe(mapAsync(async x => x * 2));
     const chunks = [];
     result.on('data', c => chunks.push(c));
     result.on('end', () => {
@@ -30,7 +30,7 @@ describe('Async Mapper', () => {
     const stream = createStream();
     stream.push(10);
     stream.push(null);
-    const result = stream.pipe(asyncMapper());
+    const result = stream.pipe(mapAsync());
     const chunks = [];
     result.on('data', c => chunks.push(c));
     result.on('end', () => {
@@ -46,7 +46,7 @@ describe('Async Mapper', () => {
     stream.push(10);
     stream.push(7);
     stream.push(null);
-    const result = stream.pipe(asyncMapper(async x => x * 2));
+    const result = stream.pipe(mapAsync(async x => x * 2));
     const chunks = [];
     result.on('data', c => chunks.push(c));
     result.on('end', () => {
@@ -62,7 +62,7 @@ describe('Async Mapper', () => {
     const stream = createStream();
     stream.push(10);
     stream.push(null);
-    const result = stream.pipe(asyncMapper(() => Promise.reject(Error('An error occurred'))));
+    const result = stream.pipe(mapAsync(() => Promise.reject(Error('An error occurred'))));
     result.on('error', (e) => {
       expect(e).toBeInstanceOf(Error);
       done();
@@ -73,7 +73,7 @@ describe('Async Mapper', () => {
     const error = new Error('A composition error occurred');
     const stream = createStream([10, null]);
     const result = compose(
-      asyncMapper(async () => { throw error; }),
+      mapAsync(async () => { throw error; }),
       filter(() => true),
     )(stream);
     await expect(streamAsPromise(result)).rejects.toBe(error);
@@ -83,7 +83,7 @@ describe('Async Mapper', () => {
     const stream = createStream();
     stream.push(15);
     stream.push(null);
-    const result = stream.pipe(asyncMapper(x => x * 2));
+    const result = stream.pipe(mapAsync(x => x * 2));
     const chunks = [];
     result.on('data', c => chunks.push(c));
     result.on('end', () => {
@@ -98,7 +98,7 @@ describe('Async Mapper', () => {
     const stream = createStream();
     stream.push(15);
     stream.push(null);
-    const result = stream.pipe(asyncMapper(() => { throw new Error('An error occured'); }));
+    const result = stream.pipe(mapAsync(() => { throw new Error('An error occured'); }));
     result.on('error', (e) => {
       expect(e).toBeInstanceOf(Error);
       done();
@@ -109,8 +109,8 @@ describe('Async Mapper', () => {
     const stream = createStream([10, null]);
     const error = new Error('unrelated error');
     const result = stream
-      .pipe(asyncMapper(async n => n * 2))
-      .pipe(mapper(() => {
+      .pipe(mapAsync(async n => n * 2))
+      .pipe(map(() => {
         throw error;
       }));
     await expect(streamAsPromise(result)).rejects.toBe(error);
@@ -120,8 +120,8 @@ describe('Async Mapper', () => {
     const stream = createStream([10, null]);
     const error = new Error('unrelated error');
     const result = compose(
-      asyncMapper(async () => { throw error; }),
-      mapper(c => c),
+      mapAsync(async () => { throw error; }),
+      map(c => c),
     )(stream);
     await expect(streamAsPromise(result)).rejects.toBe(error);
   });
@@ -130,8 +130,8 @@ describe('Async Mapper', () => {
     const stream = createStream([10, null]);
     const error = new Error('unrelated error');
     const result = compose(
-      mapper(c => c),
-      asyncMapper(async () => { throw error; }),
+      map(c => c),
+      mapAsync(async () => { throw error; }),
     )(stream);
     await expect(streamAsPromise(result)).rejects.toBe(error);
   });

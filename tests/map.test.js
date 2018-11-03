@@ -1,5 +1,5 @@
 const { Transform, Readable } = require('stream');
-const mapper = require('mapper');
+const map = require('map');
 const { streamAsPromise } = require('utils');
 
 const getStream = () => new Readable({
@@ -9,7 +9,7 @@ const getStream = () => new Readable({
 
 describe('Mapper', () => {
   test('a transform stream is returned', () => {
-    const r = mapper();
+    const r = map();
     expect(r).toBeInstanceOf(Transform);
   });
 
@@ -17,7 +17,7 @@ describe('Mapper', () => {
     const stream = getStream();
     stream.push(10);
     stream.push(null);
-    const result = stream.pipe(mapper(x => x * 2));
+    const result = stream.pipe(map(x => x * 2));
     const chunks = [];
     result.on('data', c => chunks.push(c));
     result.on('end', () => {
@@ -32,7 +32,7 @@ describe('Mapper', () => {
     const stream = getStream();
     stream.push(10);
     stream.push(null);
-    const result = stream.pipe(mapper());
+    const result = stream.pipe(map());
     const chunks = [];
     result.on('data', c => chunks.push(c));
     result.on('end', () => {
@@ -48,7 +48,7 @@ describe('Mapper', () => {
     stream.push(10);
     stream.push(7);
     stream.push(null);
-    const result = stream.pipe(mapper(x => x * 2));
+    const result = stream.pipe(map(x => x * 2));
     const chunks = [];
     result.on('data', c => chunks.push(c));
     result.on('end', () => {
@@ -64,7 +64,7 @@ describe('Mapper', () => {
     const stream = getStream();
     stream.push(10);
     stream.push(null);
-    const result = stream.pipe(mapper(() => { throw new Error('An error occurred'); }));
+    const result = stream.pipe(map(() => { throw new Error('An error occurred'); }));
     result.on('error', (e) => {
       expect(e).toBeInstanceOf(Error);
       done();
@@ -76,7 +76,7 @@ describe('Mapper', () => {
     stream.push(10);
     stream.push(5);
     stream.push(null);
-    const mappedStream = stream.pipe(mapper(n => (n > 6 ? n : undefined)));
+    const mappedStream = stream.pipe(map(n => (n > 6 ? n : undefined)));
     const result = await streamAsPromise(mappedStream);
     expect(result).toEqual([10]);
   });
@@ -84,7 +84,7 @@ describe('Mapper', () => {
   test('a map function can emit on flush', async () => {
     const stream = getStream();
     stream.push(null);
-    const mappedStream = stream.pipe(mapper(n => (n === null ? 10 : null), { mapOnFlush: true }));
+    const mappedStream = stream.pipe(map(n => (n === null ? 10 : null), { mapOnFlush: true }));
     const result = await streamAsPromise(mappedStream);
     expect(result).toEqual([10]);
   });
@@ -92,7 +92,7 @@ describe('Mapper', () => {
   test('a map function do not normally emit on flush emit on flush', async () => {
     const stream = getStream();
     stream.push(null);
-    const mappedStream = stream.pipe(mapper(n => (n === null ? 10 : null), { mapOnFlush: false }));
+    const mappedStream = stream.pipe(map(n => (n === null ? 10 : null), { mapOnFlush: false }));
     const result = await streamAsPromise(mappedStream);
     expect(result).toEqual([]);
   });
@@ -100,7 +100,7 @@ describe('Mapper', () => {
   test('if the stream is empty the streams end', async () => {
     const stream = getStream();
     stream.push(null);
-    const mappedStream = stream.pipe(mapper(n => n));
+    const mappedStream = stream.pipe(map(n => n));
     const promise = new Promise((resolve) => {
       mappedStream.on('end', resolve);
       mappedStream.resume();

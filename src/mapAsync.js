@@ -1,6 +1,6 @@
 const { Transform } = require('stream');
 
-class AsyncMapper extends Transform {
+class MapAsync extends Transform {
   constructor(options) {
     super({
       readableObjectMode: true,
@@ -32,4 +32,4 @@ class AsyncMapper extends Transform {
  * Each chunk pass through the asynchronous mapper function (Identity by default)
  * and the result is written in the output stream
  */
-module.exports = map => new AsyncMapper({ map });
+module.exports = map => new MapAsync({ map });

@@ -1,6 +1,6 @@
 const { Transform } = require('stream');
 
-class Mapper extends Transform {
+class Map extends Transform {
   constructor(options) {
     super({
       readableObjectMode: true,
@@ -38,4 +38,4 @@ class Mapper extends Transform {
 /**
  * This function produce a mapper.
  */
-module.exports = (map, { mapOnFlush } = { mapOnFlush: false }) => new Mapper({ map, mapOnFlush });
+module.exports = (map, { mapOnFlush } = { mapOnFlush: false }) => new Map({ map, mapOnFlush });
