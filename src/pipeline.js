@@ -19,6 +19,7 @@ const pipeline = (options = defaultOptions) => (...transformers) => {
  * `pipeline` is different from `compose` because it simply build a pipeline for transformations
  * that can be composed again. `compose` do not support subcomposing and apply transformations
  * directly
+ * @name pipeline
  */
 module.exports.factory = pipeline;
 module.exports = pipeline();
