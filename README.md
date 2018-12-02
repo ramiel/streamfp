@@ -1,4 +1,4 @@
-# Cascade
+# StreamFP
 
 Transform node streams in reactive entities.
 
@@ -29,7 +29,7 @@ It lets you apply a map function to each data in the stream,
 the same way Array.prototype.map works
 
 ```js
-const { map } = require('cascade');
+const { map } = require('streamfp');
 // A stream of daily temperatures in °C.
 // Each chunk is a number
 const stream = getDailyTemperaturesStream(); // can be any node stream
@@ -50,7 +50,7 @@ stream.pipe(
 Filter let you discard some value depending on the result of a function, the same way Array.prototype.filter works
 
 ```js
-const { filter } = require('cascade');
+const { filter } = require('streamfp');
 // A stream of daily temperatures in °C.
 // Each chunk is a number
 const stream = getDailyTemperaturesStream(); // can be any node stream
@@ -67,7 +67,7 @@ stream.pipe(
 Reduce your data the same way you do with arrays. Remember that, differently from map dn filter, the resulting value is emitted only when the stream is closed.
 
 ```js
-const { reduce } = require('cascade');
+const { reduce } = require('streamfp');
 // A stream of daily temperatures in °C.
 // Each chunk is a number
 const stream = getDailyTemperaturesStream(); // can be any node stream
@@ -102,7 +102,7 @@ The signature of compose is `(...transformations) => stream => stream`
 ```js
 // Let's find the average temperature among all the temperatures that
 // have been more than 90°F
-const { map, filter, reduce, compose } = require('cascade');
+const { map, filter, reduce, compose } = require('streamfp');
 
 const stream = getDailyTemperaturesStream(); // can be any node stream
 
