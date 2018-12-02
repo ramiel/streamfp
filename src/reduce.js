@@ -1,6 +1,6 @@
 const { Transform } = require('stream');
 
-class Reducer extends Transform {
+class Reduce extends Transform {
   constructor(options) {
     super({
       readableObjectMode: true,
@@ -37,4 +37,4 @@ class Reducer extends Transform {
  * @param {Function} reducer Is the reduce function. This mjust return the accumulated value
  * @param {Any} acc An optional accumulator. An empty array by default
  */
-module.exports = (reducer, acc) => new Reducer({ reducer, acc });
+module.exports = (reducer, acc) => new Reduce({ reducer, acc });

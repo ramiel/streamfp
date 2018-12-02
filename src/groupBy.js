@@ -1,4 +1,4 @@
-const reducer = require('./reducer');
+const reduce = require('./reduce');
 const objectValues = require('./objectValues');
 const pipeline = require('./pipeline');
 
@@ -19,7 +19,7 @@ const pipeline = require('./pipeline');
  *
  */
 module.exports = propName => pipeline(
-  reducer((grouped, element) => ({
+  reduce((grouped, element) => ({
     ...grouped,
     [element[propName]]: {
       ...grouped[element[propName]],

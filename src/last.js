@@ -1,4 +1,4 @@
-const reducer = require('./reducer');
+const reducer = require('./reduce');
 
 /**
  * Returns a transformation that emits only the latest chunk
