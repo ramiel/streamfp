@@ -5,27 +5,46 @@
 
 
 
-Transform node streams in reactive entities.
+Use node streams as reactive entities.
 
-The idea behind this module is explained in [this article](https://medium.com/hypersaid/the-hidden-power-of-node-js-stream-reactive-programming-4bc5c40ab601).
+The concept behind this module is explained in [this article](https://medium.com/hypersaid/the-hidden-power-of-node-js-stream-reactive-programming-4bc5c40ab601).
 
 The main idea is to let you easily manipulate your streamed data.     
 
-- The stream is not changed. No new stream class wraps your streams that remains always pure node streams.
-- Every node stream functionality works. In example you can mix `compose` from this library with `pipe` from node core library.
-- Let you manage your stream flow in a functional programming style
-- Easy: you can do everything with three building blocks
+- The stream is not changed. No new stream class wraps your streams that remain always pure node streams.
+- Every node stream functionality works. You can mix `compose` from this library with `pipe` from node's core library.
+- Let you manage your stream flow in a functional programming style.
+- Easy: you can do everything with three building blocks: map, filter, reduce.
 - Powerful: Lot of more complex building blocks are available to let you better express your code.
 
 **NOTE**: while the module is complete and fully functional, this documentation is not.
 
 # Table of Content
 
-- Basics
+- [Basics](#basics)
   - [map/mapAsync](#map-mapasync)
   - [filter](#filter)
   - [reduce](#reduce)
   - [compose](#compose)
+- Advanced
+  - flat
+  - forEach
+  - group
+  - groupBy
+  - inspect
+  - last
+  - objectValues
+- Utility
+  - pipeline
+  - fromValues
+  - streamAsPromise
+- Customize
+  - Write your own transformer
+
+# Basics
+
+All the power of this library is leveraged to you trough three basic transformers (`map`, `filter` and `reduce`... sounds familiar?) 
+and a way to compose them (`compose`, yes, definetely familiar).
 
 ## map/mapAsync
 
@@ -69,7 +88,7 @@ stream.pipe(
 
 ## reduce
 
-Reduce your data the same way you do with arrays. Remember that, differently from map dn filter, the resulting value is emitted only when the stream is closed.
+Reduce your data the same way you do with arrays. Remember that, differently from map and filter, the resulting value is emitted only when the stream is closed.
 
 ```js
 const { reduce } = require('streamfp');
@@ -101,9 +120,8 @@ res.on('error', () => {
 });
 ```
 
-`compose` let you work the same way you do with function composition.
-The signature of compose is:    
-`compose :: (...transformations) => stream => stream`
+`compose` lets you work the same way you do with function composition.    
+The signature of compose is: `compose :: (...transformations) -> stream -> stream`
 
 
 ```js
@@ -115,14 +133,16 @@ const stream = getDailyTemperaturesStream(); // can be any node stream
 
 let i = 0;
 const res = compose(
-  map(temp => temp * 1.8 + 32)
-  filter(temp => temp > 90)
+  map(temp => temp * 1.8 + 32),
+  filter(temp => temp > 90),
   reduce((total, temp) => {
     i += 1;
     return total + temp;
-  }, 0)
+  }, 0),
 )(stream);
 
+// we could use some useful method that transform a stream in a promise
+// but let use the standard node way for the moment
 res.on('data', total => {
   const average = total / i;
   console.log(`Average value of temperature 
