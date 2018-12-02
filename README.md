@@ -102,7 +102,8 @@ res.on('error', () => {
 ```
 
 `compose` let you work the same way you do with function composition.
-The signature of compose is `(...transformations) => stream => stream`
+The signature of compose is:    
+`compose :: (...transformations) => stream => stream`
 
 
 ```js
