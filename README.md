@@ -1,5 +1,10 @@
 # StreamFP
 
+[![pipeline](https://gitlab.com/ramiel/streamfp/badges/master/pipeline.svg)](https://gitlab.com/ramiel/streamfp/pipelines)
+[![coverage](https://gitlab.com/ramiel/streamfp/badges/master/coverage.svg)](https://gitlab.com/ramiel/streamfp/-/jobs)
+
+
+
 Transform node streams in reactive entities.
 
 The idea behind this module is explained in [this article](https://medium.com/hypersaid/the-hidden-power-of-node-js-stream-reactive-programming-4bc5c40ab601).
