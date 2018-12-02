@@ -1,4 +1,5 @@
 const { Transform } = require('stream');
+const { isCallable } = require('./utils');
 
 class Reduce extends Transform {
   constructor(options) {
@@ -7,18 +8,22 @@ class Reduce extends Transform {
       writableObjectMode: true,
       ...options,
     });
-    if (!options.reducer || !(options.reducer instanceof Function)) {
+    if (!options.reducer || !isCallable(options.reducer)) {
       throw new Error('A reducer function is mandatory');
     }
     this.reducer = options.reducer;
-    this.acc = options.acc !== undefined
-      ? options.acc
-      : [];
+    this.acc = options.acc;
+    this.waitSecondChunk = this.acc === undefined;
   }
 
   _transform(chunk, encoding, callback) {
     try {
-      this.acc = this.reducer(this.acc, chunk);
+      if (this.waitSecondChunk && chunk !== null) {
+        this.acc = chunk;
+        this.waitSecondChunk = false;
+      } else {
+        this.acc = this.reducer(this.acc, chunk);
+      }
     } catch (e) {
       return callback(e);
     }

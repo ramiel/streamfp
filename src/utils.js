@@ -9,6 +9,12 @@ const utils = {
   }),
 
   createStream: fromValues,
+
+  /**
+   * Return true if the callable is a function
+   * Duck-typing by underscore
+   */
+  isCallable: callable => !!(callable && callable.constructor && callable.call && callable.apply),
 };
 
 module.exports = utils;
