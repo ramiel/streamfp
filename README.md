@@ -67,7 +67,7 @@ stream.pipe(
 );
 ```
 
-## Reduce
+## reduce
 
 Reduce your data the same way you do with arrays. Remember that, differently from map dn filter, the resulting value is emitted only when the stream is closed.
 
@@ -86,9 +86,10 @@ stream.pipe(
 );
 ```
 
-## Compose
+## compose
 
-Compose is a better pipe. `pipe` has the disvantage that you should listen to the `error` event of each intermediate stream.
+Compose is a better `pipe`.    
+`pipe` has the disvantage that you should listen to the `error` event of each intermediate stream.
 
 ```js
 const res = stream
