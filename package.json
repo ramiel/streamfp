@@ -1,7 +1,7 @@
 {
-  "name": "cascade",
+  "name": "streamfp",
   "version": "0.1.0",
-  "description": "Transform node streams in reactive entities with a simplified management",
+  "description": "Use node streams as reactive entities with a simplified management",
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
@@ -11,19 +11,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/ramiel/cascade.git"
+    "url": "git+ssh://git@github.com/ramiel/streamfp.git"
   },
   "keywords": [
     "stream",
     "node",
-    "reactive"
+    "reactive",
+    "fp"
   ],
   "author": "Fabrizio Ruggeri",
   "license": "MIT",
   "bugs": {
-    "url": "https://gitlab.com/ramiel/cascade/issues"
+    "url": "https://github.com/ramiel/streamfp/issues"
   },
-  "homepage": "https://gitlab.com/ramiel/cascade#readme",
+  "homepage": "https://github.com/ramiel/streamfp#readme",
   "devDependencies": {
     "eslint": "^5.7.0",
     "eslint-config-airbnb-base": "^13.1.0",
