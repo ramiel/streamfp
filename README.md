@@ -156,7 +156,7 @@ res.on('error', (e) => {
 
 # Advanced
 
-Here a collection of smarter transformers that implement useful behavior. The same behavior can be achieved with map, filter and reduce but it's easier to have ready building blocks
+Here a collection of smarter transformers that implement useful behaviors. The same behaviors can be achieved with map, filter and reduce but it's easier to have ready building blocks
 
 ## flat
 
@@ -165,7 +165,7 @@ Given a chunk that is an array, it produce a chunk for each element of the array
 ```js
 const { compose, fromValues, flat } = require('streamfp');
 
-/// Here we're using `fromValues` to produce a stream from an array.
+// Here we're using `fromValues` to produce a stream from an array.
 // Check it its documentation
 const stream = fromValues([[1, 2, 3], [4, 5], null]);
 
