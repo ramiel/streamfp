@@ -3,6 +3,7 @@ const compose = require('./src/compose');
 const filter = require('./src/filter');
 const forEach = require('./src/forEach');
 const fromValues = require('./src/fromValues');
+const flat = require('./src/flat');
 const group = require('./src/group');
 const groupBy = require('./src/groupBy');
 const inspect = require('./src/inspect');
@@ -22,6 +23,7 @@ module.exports = {
   streamAsPromise,
 
   filter,
+  flat,
   forEach,
   group,
   groupBy,
