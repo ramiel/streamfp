@@ -9,7 +9,7 @@ const utils = {
    * Return a promise from a stream
    * @params {Object} options
    * @params {Boolean} options.getData If true the promise will resolve with the data. Default true
-   * @params {Boolean} options.drain   If true and if possible the stream will be drained calling
+   * @params {Boolean} options.drain   If true and if possible, the stream will be drained calling
    *                                   "resume" on it. This let the stream complete even if no data
    *                                   is collected. Default true
    */
