@@ -28,17 +28,17 @@ The main idea is to let you easily manipulate your streamed data.
   - [compose](#compose)
 - [Advanced](#advanced)
   - [flat](#flat)
-  - forEach
-  - group
-  - groupBy
-  - inspect
-  - last
-  - objectValues
-- Utility
-  - pipeline
-  - fromValues
-  - streamAsPromise
-- Customize
+  - [forEach](#forEach)
+  - [group](#group)
+  - [groupBy](#groupBy)
+  - [inspect](#inspect)
+  - [last](#last)
+  - [objectValues](#objectValues)
+- [Utilities](#Utilities)
+  - [pipeline](#pipeline)
+  - [fromValues](#fromValues)
+  - [streamAsPromise](#streamAsPromise)
+- [Customize](#Customize)
   - Write your own transformer
 
 # Basics
@@ -166,14 +166,14 @@ Given a chunk that is an array, it produce a chunk for each element of the array
 const { compose, fromValues, flat } = require('streamfp');
 
 // Here we're using `fromValues` to produce a stream from an array.
-// Check it its documentation
+// Check its documentation
 const stream = fromValues([[1, 2, 3], [4, 5], null]);
 
 const resStream = compose(
   flat(),
 )(stream);
 
-resStream.on('data', data => console.log(`${data}`));
+resStream.on('data', data => console.log(data));
 
 /* 
 The output will be:
@@ -185,3 +185,240 @@ The output will be:
 */
 
 ```
+
+## forEach
+
+For each let you execute an action without changing the stream
+
+```js
+const { compose, fromValues, forEach } = require('streamfp');
+
+const stream = fromValues([1,2,3, null]);
+
+const resStream = compose(
+  forEach(chunk => console.log('forEach: ', chunk * 2)),
+)(stream);
+
+resStream.on('data', data => console.log('data: ', data));
+
+/* 
+The output will be:
+
+forEach:  2
+data:  1
+forEach:  4
+data:  2
+forEach:  6
+data:  3
+*/
+
+```
+
+## group
+
+It groups chunks in arrays of defined size. Last array can be smaller than the others because the stream is finished and there is no more data.
+
+```js
+const { compose, fromValues, group } = require('streamfp');
+const stream = fromValues(['a', 'b', 'c', 'd', 'e', 'f', 'g', null]);
+
+// The result will be groups of 3 letters
+const resStream = compose(
+  group(3),
+)(stream);
+
+resStream.on('data', data => console.log(data));
+
+/* 
+The output will be:
+['a', 'b', 'c']
+['d', 'e', 'f']
+['g']   Since the stream is finished, the last group is smaller than the others
+*/
+```
+
+## groupBy
+
+Group several objects depending on the value of one of their properties.    
+If two properties collide, the last passing through the stream wins.
+
+```js
+const { compose, fromValues, groupBy } = require('streamfp');
+
+const stream = fromValues([
+  { id: '2', lastname: 'Lannister' },
+  { id: '1', name: 'John' },
+  { id: '2', name: 'Tyrion' },
+  { id: '1', lastname: 'Stark' },
+  { id: '1', lastname: 'Snow' },
+  null,
+]);
+
+const resStream = compose(
+  groupBy('id'),
+)(stream);
+
+resStream.on('data', data => console.log(data));
+/* 
+The output will be:
+{ id: '1', name: 'John', lastname: 'Snow' }
+{ id: '2', name: 'Tyrion', lastname: 'Lannister' }
+*/
+```
+
+## inspect
+
+Inspect is a very useful function to debug what's passing in your composed stream
+
+```js
+const { compose, fromValues, map, inspect } = require('streamfp');
+
+const stream = fromValues([ 1, 2, 3, null ]);
+
+const resStream = compose(
+  map(n => n * 2),
+  inspect()
+  map(n => n + 1),  
+)(stream);
+
+/* 
+Inspect will log on the console the partial result after the first map
+2
+4
+6
+*/
+```
+
+By default `inspect` logs to the console but you can modify this behavior by passing a custom loggin function.
+
+```js
+const { compose, fromValues, map, inspect } = require('streamfp');
+const logger = require('my-fancy-logger');
+
+const stream = fromValues([ 1, 2, 3, null ]);
+compose(
+  map(n => n * 2),
+  inspect((data) => logger.debug(data))
+  map(n => n + 1),  
+)(stream);
+```
+
+## last
+
+Last returns only the last chunk of the stream. If the stream never ends, last never return
+
+```js
+const { compose, fromValues, inspect, last } = require('streamfp');
+
+const stream = fromValues([1, 2, 3, null]);
+
+compose(
+  last(),
+  inspect(),
+)(stream);
+
+/**
+Output:
+3
+*/
+```
+
+## objectValues
+
+Given an object, it create a stream chunk from every value in the object.
+
+```js
+const {
+  compose, fromValues, inspect, objectValues,
+} = require('streamfp');
+
+const stream = fromValues([{ a: 'hello' }, { a: 'silence', b: 'my old friend' }, null]);
+
+compose(
+  objectValues(),
+  inspect(),
+)(stream);
+
+/**
+ Output:
+hello
+silence
+my old friend
+*/
+```
+
+# Utilities
+
+These methods do not transform the stream but are useful to interact with it.
+
+## pipeline
+
+A pipeline is a series of transformer that can be passed, as a unique block, to compose. Let's say we have a series of operation to convert the temperature as we saw before. We can save the block in a pipeline and reuse it every time we need. We can consider a pipeline as a partially applied composition of transformers.
+
+```js
+const {
+  map, filter, reduce, compose, inspect, fromValues,
+  pipeline,
+} = require('streamfp');
+
+let i = 0;
+const averageTempPipeline = pipeline(
+  map(temp => temp * 1.8 + 32),
+  filter(temp => temp > 90),
+  reduce((total, temp) => {
+    i += 1;
+    return total + temp;
+  }, 0),
+);
+
+const stream = fromValues([41, 45, null]);
+
+compose(
+  averageTempPipeline,
+  map(res => res / i),
+  inspect(),
+)(stream);
+```
+
+Pipelines can be nested and reused. They're very useful to isolate a complex behavior that needs several transformer in one logic block.
+
+```js
+const pipelineA = pipeline(
+  map(...),
+  filter(...)
+);
+
+const pipelineB = pipeline(
+  flat(),
+  pipelineA,
+  map(...)
+);
+```
+
+## fromValues
+
+This function takes an array and transform it in a stream. Remeber to pass `null` as last value if you want to create a finished stream.
+
+## streamAsPromise
+
+This function let you treat a stream as a promise.
+
+```js
+const promise = streamAsPromise(stream);
+
+try {
+  const streamResult = await promise; // called when the stream en ds normally
+} catch(e) {
+  console.error(e); // called when the stream ends because of an error
+}
+```
+
+This function takes another argument where you can specify additional options: `streamAsPromise(stream, {getData: false, drain: true})`
+
+- `getData`: if true the data are passed to the resolved promis. Default true
+- `drain`: if true the stream is drained (consumed, read) even if there's no explicit stream read operation. Default to true. It's useful if you don't need the data but still you need the stream to be consumed. Remember: a stream is consumed only if the `data` event has an handler or if the `resume` method is called.
+
+
+# Customize
+
+TBD

@@ -10,11 +10,15 @@ class Inspector extends Transform {
     this.inspectFn = options.inspectFn !== undefined && typeof options.inspectFn !== 'string'
       ? options.inspectFn
       : console.log; // eslint-disable-line no-console
-    this.title = typeof options.inspectFn === 'string' ? options.inspectFn : '';
+    this.title = typeof options.inspectFn === 'string' ? options.inspectFn : undefined;
   }
 
   _transform(chunk, encoding, callback) {
-    this.inspectFn(chunk, this.title);
+    const params = [chunk];
+    if (this.title !== undefined) {
+      params.push(this.title);
+    }
+    this.inspectFn.apply(null, params);
     callback(null, chunk);
   }
 }
