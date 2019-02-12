@@ -31,13 +31,18 @@ describe('filter', () => {
   });
 
   test('by default filters nothing', async () => {
-    const stream = createStream();
-    stream.push(4);
-    stream.push(5);
-    stream.push(1);
-    stream.push(null);
+    const stream = createStream([4, 5, 1, null]);
     const filteredStream = stream.pipe(filter());
     const result = await streamAsPromise(filteredStream);
     expect(result).toEqual([4, 5, 1]);
+  });
+
+  test('second parameter is the index', async () => {
+    const stream = createStream([10, 7, 3, 4, null]);
+    const result = stream.pipe(filter((x, index) => index > 1));
+    const chunks = await streamAsPromise(result);
+    expect(chunks).toHaveLength(2);
+    expect(chunks[0]).toBe(3);
+    expect(chunks[1]).toBe(4);
   });
 });
