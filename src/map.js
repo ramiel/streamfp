@@ -7,6 +7,7 @@ class Map extends Transform {
       writableObjectMode: true,
       ...options,
     });
+    this.index = 0;
     this.map = options.map || (x => x);
     this.mapOnFlush = options.mapOnFlush;
   }
@@ -14,7 +15,7 @@ class Map extends Transform {
   _onData(chunk, encoding, callback) {
     let res;
     try {
-      res = this.map(chunk);
+      res = this.map(chunk, this.index++);
     } catch (e) {
       callback(e);
       return;

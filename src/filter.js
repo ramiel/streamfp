@@ -7,13 +7,14 @@ class Filter extends Transform {
       writableObjectMode: true,
       ...options,
     });
+    this.index = 0;
     this.filter = options.filter || (x => x);
   }
 
   _transform(chunk, encoding, callback) {
     let take;
     try {
-      take = this.filter(chunk);
+      take = this.filter(chunk, this.index++);
     } catch (e) {
       return callback(e);
     }

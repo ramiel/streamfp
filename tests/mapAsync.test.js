@@ -135,4 +135,25 @@ describe('mapAsync', () => {
     )(stream);
     await expect(streamAsPromise(result)).rejects.toBe(error);
   });
+
+  test('second parameter is the index', async () => {
+    const stream = createStream([10, 7, null]);
+    const result = stream.pipe(mapAsync(async (x, index) => index));
+    const chunks = await streamAsPromise(result);
+    expect(chunks).toHaveLength(2);
+    expect(chunks[0]).toBe(0);
+    expect(chunks[1]).toBe(1);
+  });
+
+  test('two mapAsync use two different indexes', async () => {
+    const stream = createStream([10, 7, null]);
+    const stream2 = createStream(['a', 'b', null]);
+    const result = stream.pipe(mapAsync(async (x, index) => index));
+    const result2 = stream2.pipe(mapAsync(async (x, index) => index));
+    await streamAsPromise(result);
+    const chunks = await streamAsPromise(result2);
+    expect(chunks).toHaveLength(2);
+    expect(chunks[0]).toBe(0);
+    expect(chunks[1]).toBe(1);
+  });
 });

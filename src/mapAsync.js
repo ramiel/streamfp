@@ -7,13 +7,14 @@ class MapAsync extends Transform {
       writableObjectMode: true,
       ...options,
     });
+    this.index = 0;
     this.map = options.map || (async x => x);
   }
 
   _transform(chunk, encoding, callback) {
     let promise;
     try {
-      promise = this.map(chunk);
+      promise = this.map(chunk, this.index++);
     } catch (e) {
       callback(e);
       return;

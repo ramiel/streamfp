@@ -1,6 +1,6 @@
 const { Transform, Readable } = require('stream');
 const map = require('map');
-const { streamAsPromise } = require('utils');
+const { streamAsPromise, createStream } = require('utils');
 
 const getStream = () => new Readable({
   objectMode: true,
@@ -107,5 +107,26 @@ describe('map', () => {
     });
     await expect(promise).resolves.toBeUndefined();
     // expect(result).toEqual([]);
+  });
+
+  test('second parameter is the index', async () => {
+    const stream = createStream([10, 7, null]);
+    const result = stream.pipe(map((x, index) => index));
+    const chunks = await streamAsPromise(result);
+    expect(chunks).toHaveLength(2);
+    expect(chunks[0]).toBe(0);
+    expect(chunks[1]).toBe(1);
+  });
+
+  test('two maps, uses two different indexes', async () => {
+    const stream = createStream([10, 7, null]);
+    const stream2 = createStream(['a', 'b', null]);
+    const result = stream.pipe(map((x, index) => index));
+    const result2 = stream2.pipe(map((x, index) => index));
+    await streamAsPromise(result);
+    const chunks = await streamAsPromise(result2);
+    expect(chunks).toHaveLength(2);
+    expect(chunks[0]).toBe(0);
+    expect(chunks[1]).toBe(1);
   });
 });
