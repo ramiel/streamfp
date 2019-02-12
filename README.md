@@ -69,6 +69,8 @@ stream.pipe(
 )
 ```
 
+The map function receives the `index` as second parameter.
+
 ## filter
 
 Filter let you discard some value depending on the result of a function, the same way Array.prototype.filter works
@@ -85,6 +87,8 @@ stream.pipe(
   filter(temp => temp > 10)
 );
 ```
+
+The filter function receives the `index` as second parameter.
 
 ## reduce
 
