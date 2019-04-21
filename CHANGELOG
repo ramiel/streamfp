@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.1
+  - Update to documentation
+
 ## 0.2.0
   - map/mapAsync/filter receive index of the iteration as second parameter
 
