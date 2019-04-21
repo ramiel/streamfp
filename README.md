@@ -12,12 +12,13 @@ The concept behind this module is explained in [this article](https://medium.com
 The main idea is to let you easily manipulate your streamed data.     
 
 - The stream is not changed. No new stream class wraps your streams that remain always pure node streams.
-- Every node stream functionality works. You can mix `compose` from this library with `pipe` from node's core library.
-- Let you manage your stream flow in a functional programming style.
+- Every node.js stream functionality works. You can mix `compose` from this library with `pipe` from node's core library.
+- It lets you manage your stream flow in a functional programming style.
 - Easy: you can do everything with three building blocks: map, filter, reduce.
 - Powerful: Lot of more complex building blocks are available to let you better express your code.
+- Customizable: Write your own transformers or pipelines for later reuse.
 
-**NOTE**: while the module is complete and fully functional, this documentation is not.
+**NOTE**: while the module is complete and fully working, this documentation is not.
 
 # Table of Content
 
@@ -419,7 +420,7 @@ try {
 
 This function takes another argument where you can specify additional options: `streamAsPromise(stream, {getData: false, drain: true})`
 
-- `getData`: if true the data are passed to the resolved promis. Default true
+- `getData`: if true the data are passed to the resolved promise. If false no data is returned when the promise is resolved. Default true
 - `drain`: if true the stream is drained (consumed, read) even if there's no explicit stream read operation. Default to true. It's useful if you don't need the data but still you need the stream to be consumed. Remember: a stream is consumed only if the `data` event has an handler or if the `resume` method is called.
 
 

@@ -13,9 +13,9 @@ const pipeline = require('./pipeline');
  *  groupBy('user)
  * )(stream)
  *
- * [{user: '123', name: 'Fabrizio}, {user: '456', name: 'Soli}, {user: '123', lastname: 'Ruggeri}]
+ * [{user: '123', name: 'Tyrion}, {user: '456', name: 'John}, {user: '123', lastname: 'Lannister}]
  * returns
- * [{user: '123', name: 'Fabrizio,  lastname: 'Ruggeri}, {user: '456', name: 'Soli}]
+ * [{user: '123', name: 'Tyrion,  lastname: 'Lannister}, {user: '456', name: 'John}]
  *
  */
 module.exports = propName => pipeline(
