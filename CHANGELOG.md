@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.2
+  - Updated dependecnies for security reasons
+
 ## 0.2.1
   - Update to documentation
 
