@@ -50,6 +50,8 @@ and a way to compose them (`compose`, yes, definetely familiar).
 
 ## map/mapAsync
 
+`map((chunk, index) -> transformedChunk)`
+
 Map is one of the three pillars of this library.
 It lets you apply a map function to each data in the stream,
 the same way Array.prototype.map works
@@ -75,6 +77,9 @@ The map function receives the `index` as second parameter.
 
 ## filter
 
+`filter((chunk, index) -> bool)`
+
+
 Filter let you discard some value depending on the result of a function, the same way Array.prototype.filter works
 
 ```js
@@ -94,6 +99,8 @@ The filter function receives the `index` as second parameter.
 
 ## reduce
 
+`reduce((acc, chunk, index) -> acc, initialValue)`
+
 Reduce your data the same way you do with arrays. Remember that, differently from map and filter, the resulting value is emitted only when the stream is closed.
 
 ```js
@@ -112,6 +119,8 @@ stream.pipe(
 ```
 
 ## compose
+
+`compose(...fns)(stream)`
 
 Compose is a better `pipe`.    
 `pipe` has the disvantage that you should listen to the `error` event of each intermediate stream.
@@ -166,7 +175,9 @@ Here a collection of smarter transformers that implement useful behaviors. The s
 
 ## flat
 
-Given a chunk that is an array, it produce a chunk for each element of the array
+`flat()`
+
+Given a chunk that is an array, it produces a chunk for each element of the array
 
 ```js
 const { compose, fromValues, flat } = require('streamfp');
@@ -193,6 +204,8 @@ The output will be:
 ```
 
 ## forEach
+
+`forEach(chunk -> void)`
 
 For each let you execute an action without changing the stream
 
@@ -222,6 +235,9 @@ data:  3
 
 ## group
 
+`group(n)`
+
+
 It groups chunks in arrays of defined size. Last array can be smaller than the others because the stream is finished and there is no more data.
 
 ```js
@@ -244,6 +260,8 @@ The output will be:
 ```
 
 ## groupBy
+
+`groupBy(groupKey)`
 
 Group several objects depending on the value of one of their properties.    
 If two properties collide, the last passing through the stream wins.
@@ -273,6 +291,9 @@ The output will be:
 ```
 
 ## inspect
+
+`inspect()`    
+`inspect(chunk -> void)`
 
 Inspect is a very useful function to debug what's passing in your composed stream
 
@@ -311,6 +332,8 @@ compose(
 
 ## last
 
+`last()`
+
 Last returns only the last chunk of the stream. If the stream never ends, last never return
 
 ```js
@@ -330,6 +353,8 @@ Output:
 ```
 
 ## objectValues
+
+`objectValues()`
 
 Given an object, it create a stream chunk from every value in the object.
 
@@ -359,7 +384,7 @@ These methods do not transform the stream but are useful to interact with it.
 
 ## pipeline
 
-A pipeline is a series of transformer that can be passed, as a unique block, to compose. Let's say we have a series of operation to convert the temperature as we saw before. We can save the block in a pipeline and reuse it every time we need. We can consider a pipeline as a partially applied composition of transformers.
+A pipeline is a series of transformers that can be passed, as a unique block, to compose. Let's say we have a series of operations to convert the temperature as we saw before. We can save the block in a pipeline and reuse it every time we need. We can consider a pipeline as a partially applied composition of transformers.
 
 ```js
 const {
@@ -403,17 +428,23 @@ const pipelineB = pipeline(
 
 ## fromValues
 
-This function takes an array and transform it in a stream. Remeber to pass `null` as last value if you want to create a finished stream.
+This function takes an array and transforms it in a stream. Remeber to pass `null` as last value if you want to create a finished stream.
+
+```js
+const { fromValues } = require('streamfp');
+
+const stream = fromValues([chunk1, chunk2, null]);
+```
 
 ## streamAsPromise
 
-This function let you treat a stream as a promise.
+This function let you handle a stream as a promise.
 
 ```js
 const promise = streamAsPromise(stream);
 
 try {
-  const streamResult = await promise; // called when the stream en ds normally
+  const streamResult = await promise; // called when the stream ends normally
 } catch(e) {
   console.error(e); // called when the stream ends because of an error
 }
