@@ -2,6 +2,7 @@
 
 [![pipeline](https://gitlab.com/ramiel/streamfp/badges/master/pipeline.svg)](https://gitlab.com/ramiel/streamfp/pipelines)
 [![coverage](https://gitlab.com/ramiel/streamfp/badges/master/coverage.svg)](https://gitlab.com/ramiel/streamfp/-/jobs)
+[![npm version](https://badge.fury.io/js/streamfp.svg)](https://badge.fury.io/js/streamfp)
 
 
 
