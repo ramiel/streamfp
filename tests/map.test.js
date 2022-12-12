@@ -4,7 +4,7 @@ const { streamAsPromise, createStream } = require('utils');
 
 const getStream = () => new Readable({
   objectMode: true,
-  read() { },
+  read() {},
 });
 
 describe('map', () => {
@@ -64,7 +64,11 @@ describe('map', () => {
     const stream = getStream();
     stream.push(10);
     stream.push(null);
-    const result = stream.pipe(map(() => { throw new Error('An error occurred'); }));
+    const result = stream.pipe(
+      map(() => {
+        throw new Error('An error occurred');
+      }),
+    );
     result.on('error', (e) => {
       expect(e).toBeInstanceOf(Error);
       done();
@@ -84,15 +88,27 @@ describe('map', () => {
   test('a map function can emit on flush', async () => {
     const stream = getStream();
     stream.push(null);
-    const mappedStream = stream.pipe(map(n => (n === null ? 10 : null), { mapOnFlush: true }));
+    const mappedStream = stream.pipe(
+      map(n => (n === null ? 10 : null), { mapOnFlush: true }),
+    );
     const result = await streamAsPromise(mappedStream);
     expect(result).toEqual([10]);
   });
 
-  test('a map function do not normally emit on flush emit on flush', async () => {
+  test('a map function does not normally emit on flush', async () => {
     const stream = getStream();
     stream.push(null);
-    const mappedStream = stream.pipe(map(n => (n === null ? 10 : null), { mapOnFlush: false }));
+    const mappedStream = stream.pipe(map(n => (n === null ? 10 : null)));
+    const result = await streamAsPromise(mappedStream);
+    expect(result).toEqual([]);
+  });
+
+  test('a map function does not emit on flush, when specified', async () => {
+    const stream = getStream();
+    stream.push(null);
+    const mappedStream = stream.pipe(
+      map(n => (n === null ? 10 : null), { mapOnFlush: false }),
+    );
     const result = await streamAsPromise(mappedStream);
     expect(result).toEqual([]);
   });
@@ -118,7 +134,7 @@ describe('map', () => {
     expect(chunks[1]).toBe(1);
   });
 
-  test('two maps, uses two different indexes', async () => {
+  test('two maps use two different indexes', async () => {
     const stream = createStream([10, 7, null]);
     const stream2 = createStream(['a', 'b', null]);
     const result = stream.pipe(map((x, index) => index));
