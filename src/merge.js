@@ -1,9 +1,14 @@
 const MultiStream = require('multistream');
 
-module.exports = (streams, objectMode = true) => (objectMode
-  ? MultiStream.obj(streams)
-  : MultiStream(streams));
-
+module.exports = (streams, objectMode = true) => {
+  if (!Array.isArray(streams)) {
+    throw new Error('merge must be calle with an array of streams');
+  }
+  if (objectMode) {
+    return MultiStream.obj(streams);
+  }
+  return new MultiStream(streams);
+};
 
 // This is an old implementation but has some limits on merge of merges
 

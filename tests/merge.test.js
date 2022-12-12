@@ -26,17 +26,21 @@ describe('merge', () => {
     const result = await streamAsPromise(mergedStream);
     expect(result).toHaveLength(6);
     result.forEach(r => expect(r).toBeInstanceOf(Buffer));
-    expect(result.map(r => r.toString())).toEqual(['1', '2', '3', 'a', 'b', 'c']);
+    expect(result.map(r => r.toString())).toEqual([
+      '1',
+      '2',
+      '3',
+      'a',
+      'b',
+      'c',
+    ]);
   });
 
   test('merge can be merged', async () => {
     const stream1 = createStream(['1', '2', '3', null]);
     const stream2 = createStream(['a', 'b', 'c', null]);
     const stream3 = createStream([7, 8, 9, null]);
-    const mergedStream = merge([
-      stream3,
-      merge([stream1, stream2]),
-    ]);
+    const mergedStream = merge([stream3, merge([stream1, stream2])]);
     const result = await streamAsPromise(mergedStream);
     expect(result).toHaveLength(9);
     expect(result).toEqual([7, 8, 9, '1', '2', '3', 'a', 'b', 'c']);
@@ -58,7 +62,11 @@ describe('merge', () => {
   });
 
   test('if the first stream emit an error, the merged stream emit an error', async () => {
-    const stream1 = createStream(['a', 'b', 'c']).pipe(forEach(() => { throw new Error(); }));
+    const stream1 = createStream(['a', 'b', 'c']).pipe(
+      forEach(() => {
+        throw new Error();
+      }),
+    );
     const stream2 = createStream(['1', '2', '3', null]);
     const mergedStream = merge([stream1, stream2]);
     const promise = streamAsPromise(mergedStream);
@@ -67,7 +75,11 @@ describe('merge', () => {
 
   test('if the last stream emit an error, the merged stream emit an error', async () => {
     const stream1 = createStream(['1', '2', '3', null]);
-    const stream2 = createStream(['a', 'b', 'c']).pipe(forEach(() => { throw new Error(); }));
+    const stream2 = createStream(['a', 'b', 'c']).pipe(
+      forEach(() => {
+        throw new Error();
+      }),
+    );
     const mergedStream = merge([stream1, stream2]);
     const promise = streamAsPromise(mergedStream);
     await expect(promise).rejects.toBeInstanceOf(Error);
@@ -75,7 +87,11 @@ describe('merge', () => {
 
   test('if the stream in the middle emit an error, the merged stream emit an error', async () => {
     const stream1 = createStream(['1', '2', '3', null]);
-    const stream2 = createStream(['a', 'b', 'c']).pipe(forEach(() => { throw new Error(); }));
+    const stream2 = createStream(['a', 'b', 'c']).pipe(
+      forEach(() => {
+        throw new Error();
+      }),
+    );
     const stream3 = createStream(['1', '2', '3', null]);
     const mergedStream = merge([stream1, stream2, stream3]);
     const promise = streamAsPromise(mergedStream);
