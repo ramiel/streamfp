@@ -1,6 +1,6 @@
 {
   "name": "streamfp",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Use node streams as reactive entities with a simplified management",
   "main": "index.js",
   "scripts": {

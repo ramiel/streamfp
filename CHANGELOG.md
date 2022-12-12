@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.0
+  - Update dependencies including ;ultistream
+  
 ## 0.2.2
   - Updated dependecnies for security reasons
 
